@@ -221,8 +221,10 @@ def main():
     print("Starting ETL...")
     engine = create_db_engine()
 
-    openweather_ids = get_openweather_ids_sql(engine)
     create_tables(engine)
+
+    openweather_ids = get_openweather_ids_sql(engine)
+    
 
     for city in openweather_ids:
         try:
