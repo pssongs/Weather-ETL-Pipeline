@@ -44,24 +44,24 @@ CREATE TABLE IF NOT EXISTS observations (
     city_id INTEGER NOT NULL
         REFERENCES cities(city_id),
     observation_time TIMESTAMP NOT NULL,
-
     temperature DECIMAL(5,2),
     feels_like DECIMAL(5,2),
     temp_min DECIMAL(5,2),
     temp_max DECIMAL(5,2),
-
     humidity INTEGER,
     pressure INTEGER,
-
     wind_speed DECIMAL(5,2),
     wind_direction INTEGER,
     wind_gust DECIMAL(5,2),
-
     cloudiness INTEGER,
-
     weather_main VARCHAR(30),
     weather_description VARCHAR(100),
-    visibility INTEGER
+    visibility DECIMAL(5,2),
+    sunrise TIMESTAMP NOT NULL,
+    sunset TIMESTAMP NOT NULL,
+    timezone INTEGER,
+    rain_1h DECIMAL(5,2),
+    snow_1h DECIMAL(5,2)
 )
 """
 
@@ -81,7 +81,12 @@ insert_observation_sql = """
     cloudiness,
     weather_main,
     weather_description,
-    visibility
+    visibility,
+    sunrise,
+    sunset,
+    timezone,
+    rain_1h,
+    snow_1h
     )
     VALUES (
     :city_id,
@@ -98,7 +103,12 @@ insert_observation_sql = """
     :cloudiness,
     :weather_main,
     :weather_description,
-    :visibility 
+    :visibility, 
+    :sunrise,
+    :sunset,
+    :timezone,
+    :rain_1h,
+    :snow_1h
     )
 
     RETURNING observation_id

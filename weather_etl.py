@@ -82,7 +82,12 @@ def build_observation_param(weather: dict, city_id:int) -> dict:
         "cloudiness": weather["clouds"]["all"],
         "weather_main": weather["weather"][0]["main"],
         "weather_description": weather["weather"][0]["description"],
-        "visibility": weather["visibility"]
+        "visibility": weather["visibility"],
+        "sunrise": datetime.fromtimestamp(weather["sys"]["sunrise"], UTC),
+        "sunset": datetime.fromtimestamp(weather["sys"]["sunset"], UTC),
+        "timezone": weather["timezone"],
+        "rain_1h": weather.get("rain", {}).get("1h", 0.0),
+        "snow_1h": weather.get("snow", {}).get("1h", 0.0)
     }
     
 
