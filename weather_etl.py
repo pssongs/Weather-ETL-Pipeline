@@ -218,6 +218,7 @@ def get_openweather_ids_sql(engine) -> list:
         return conn.execute(text(get_weather_id)).scalars().all()
     
 def main():
+    print("Starting ETL...")
     engine = create_db_engine()
 
     openweather_ids = get_openweather_ids_sql(engine)
