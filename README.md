@@ -5,15 +5,10 @@
 This project automates collection of weather data from OpenWeatherMap API and stores it in a structured PostgreSQL database for analytics and historical tracking.
 
 Flow of the project:
-OpenWeather API
-        ↓
-weather_etl.py (pipeline orchestration)
-        ↓
-sql.py (database operations)
-        ↓
-PostgreSQL (Aiven)
+OpenWeatherMap API → weather_etl.py → sql.py → PostgreSQL (Aiven)
 
-config.py (global configuration used by all modules)
+Supporting module:
+config.py (loads environment variables and application settings)
 
 ## Tech Stack
 
