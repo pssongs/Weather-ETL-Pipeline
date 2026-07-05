@@ -1,5 +1,6 @@
 import requests, logging, time
 from sqlalchemy import text, create_engine
+from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime, UTC
 from sql import create_cities_table, insert_city_sql, get_city_id, get_weather_id, create_observation_table, insert_observation_sql
 from config import (
@@ -136,7 +137,10 @@ def main():
     create_tables(engine)
 
     openweather_ids = get_openweather_ids(engine)
-    
+    total_cities = len(openweather_ids)
+    successful_inserts = 0
+    failed_cities = 0
+    duplicate_observations = 0
 
     for openweather_id in openweather_ids:
         try:
@@ -150,10 +154,25 @@ def main():
             observation_id = insert_observation(engine,observation_param)
             if observation_id is None:
                 logging.info(f"{city_name}: Observation already exists. Skipping.")
+                duplicate_observations += 1
             else:    
                 logging.info(f"{city_name}: inserted observation {observation_id}")
-        except Exception as e:
-            logging.error(f"Failed to process {openweather_id}: {e}")
+                successful_inserts += 1
+        except requests.exceptions.RequestException as e:
+            logging.error(f"API request failed for {openweather_id}: {e}")
+            failed_cities += 1
+        except SQLAlchemyError as e:
+            logging.error(f"Database error for {openweather_id}: {e}")
+            failed_cities += 1
+        except Exception:
+            logging.exception(f"Unexpected error for {openweather_id}")
+            failed_cities += 1
+    logging.info(
+        f"ETL finished. Processed: {total_cities},"
+        f"Inserted: {successful_inserts}, "
+        f"Duplicates: {duplicate_observations}, "
+        f"Failures: {failed_cities}"
+    )
 
 if __name__ == "__main__":
     main()
