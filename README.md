@@ -1,1 +1,1 @@
-# seoulWeatherAnalysis
+# Weather ETL pipeline
