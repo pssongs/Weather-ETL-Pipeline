@@ -61,7 +61,10 @@ CREATE TABLE IF NOT EXISTS observations (
     sunset TIMESTAMP NOT NULL,
     timezone INTEGER,
     rain_1h DECIMAL(5,2),
-    snow_1h DECIMAL(5,2)
+    snow_1h DECIMAL(5,2),
+
+    UNIQUE (city_id, observation_time)
+
 )
 """
 
